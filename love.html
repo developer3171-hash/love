@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Will You Marry Me 💖</title>
+
+<style>
+body{
+  margin:0;
+  height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  font-family:Poppins, sans-serif;
+  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  overflow:hidden;
+}
+
+.card{
+  background:#fff;
+  padding:30px 40px;
+  border-radius:20px;
+  text-align:center;
+  box-shadow:0 20px 40px rgba(0,0,0,.2);
+  max-width:400px;
+  width:90%;
+  position:relative;
+}
+
+h1{color:#e91e63;}
+p{color:#555;}
+
+.buttons{
+  display:flex;
+  justify-content:center;
+  gap:20px;
+  margin-top:20px;
+}
+
+button{
+  padding:12px 26px;
+  border:none;
+  border-radius:30px;
+  font-size:16px;
+  cursor:pointer;
+  transition:all .3s ease;
+}
+
+#yesBtn{
+  background:#4caf50;
+  color:#fff;
+}
+
+#yesBtn:hover{transform:scale(1.1);}
+
+#noBtn{
+  background:#f44336;
+  color:#fff;
+  position:relative;
+}
+
+/* 💍 Ring Ceremony */
+.ring{
+  font-size:80px;
+  animation:ringPop 1s ease forwards;
+}
+
+@keyframes ringPop{
+  0%{transform:scale(0);opacity:0;}
+  60%{transform:scale(1.3);opacity:1;}
+  100%{transform:scale(1);}
+}
+
+/* ✨ Glow */
+.glow{
+  animation:glow 1.5s infinite alternate;
+}
+
+@keyframes glow{
+  from{text-shadow:0 0 10px #ff69b4;}
+  to{text-shadow:0 0 25px gold;}
+}
+
+/* ❤️ Hearts */
+.hearts{
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+}
+
+.heart{
+  position:absolute;
+  font-size:24px;
+  animation:floatUp 4s linear infinite;
+}
+
+@keyframes floatUp{
+  from{transform:translateY(100vh);opacity:1;}
+  to{transform:translateY(-10vh);opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+  <h1>Hey Love ❤️</h1>
+  <p>You make my world brighter every day.<br>Will you marry me? 💍</p>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes 💖</button>
+    <button id="noBtn">No 🙈</button>
+  </div>
+</div>
+
+<div class="hearts" id="hearts"></div>
+
+<script>
+const yesBtn = document.getElementById("yesBtn");
+const noBtn = document.getElementById("noBtn");
+const card = document.getElementById("card");
+const hearts = document.getElementById("hearts");
+
+let moved = false;
+
+// 😈 NO moves ONLY when tried
+noBtn.addEventListener("mouseenter", () => {
+  if(!moved){
+    noBtn.style.transform = "translateX(120px)";
+    moved = true;
+  } else {
+    noBtn.style.transform = "translateX(0)";
+    moved = false;
+  }
+});
+
+// 💍 YES = Ring Ceremony
+yesBtn.addEventListener("click", () => {
+  card.innerHTML = `
+    <h1 class="glow">She Said YES 💖</h1>
+    <div class="ring">💍</div>
+    <p>Ring ceremony complete ✨<br>Our forever begins now ❤️</p>
+  `;
+  createHearts();
+});
+
+function createHearts(){
+  for(let i=0;i<35;i++){
+    const heart=document.createElement("div");
+    heart.className="heart";
+    heart.innerText="❤️";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.animationDuration=2+Math.random()*3+"s";
+    hearts.appendChild(heart);
+    setTimeout(()=>heart.remove(),5000);
+  }
+}
+</script>
+
+</body>
+</html>
