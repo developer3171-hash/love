@@ -18,20 +18,6 @@ body{
   touch-action: manipulation;
 }
 
-/* 📳 Page shake */
-.shake{
-  animation:shake .4s;
-}
-
-@keyframes shake{
-  0%{transform:translate(0,0);}
-  20%{transform:translate(-10px,0);}
-  40%{transform:translate(10px,0);}
-  60%{transform:translate(-8px,0);}
-  80%{transform:translate(8px,0);}
-  100%{transform:translate(0,0);}
-}
-
 .card{
   background:#fff;
   padding:30px 40px;
@@ -98,7 +84,7 @@ button{
   to{text-shadow:0 0 25px gold;}
 }
 
-/* ❌ Toast */
+/* ❌ Not Possible toast */
 .toast{
   position:fixed;
   bottom:30px;
@@ -161,65 +147,67 @@ const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const card = document.getElementById("card");
 const hearts = document.getElementById("hearts");
-const body = document.body;
 
-let stage = 0;
-const isMobile = "ontouchstart" in window;
+let stage = 0; // 0 = tease, 1 = runaway
 
-/* 💻 DESKTOP BEHAVIOR */
-if(!isMobile){
-  noBtn.addEventListener("mouseenter", () => {
-    if(stage === 0){
-      noBtn.style.transform = "translateX(120px)";
-      stage = 1;
-      setTimeout(() => noBtn.style.position = "fixed", 300);
-    }
-  });
+/* 🖱 Desktop hover */
+noBtn.addEventListener("mouseenter", tease);
 
-  document.addEventListener("mousemove", (e) => {
-    if(stage !== 1) return;
-    let x = e.clientX + 60;
-    let y = e.clientY + 40;
-    if(x > innerWidth - 120) x -= 120;
-    if(y > innerHeight - 60) y -= 60;
-    noBtn.style.left = x + "px";
-    noBtn.style.top = y + "px";
-  });
-}
+/* 📱 Mobile tap */
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  vibratePhone();
+  showToast("❌ Not Possible 😏");
+  tease();
+});
 
-/* 📱 MOBILE BEHAVIOR */
-if(isMobile){
-  noBtn.addEventListener("touchstart", (e) => {
-    e.preventDefault();
-    vibratePhone();
-    showToast("❌ Not Possible 😏");
-    shakePage();
-  });
-}
-
-/* ❌ Block NO click */
+/* ❌ Block click */
 noBtn.addEventListener("click", e => e.preventDefault());
 
-/* 📳 Vibration */
-function vibratePhone(){
-  if(navigator.vibrate){
-    navigator.vibrate([400,100,400]);
+function tease(){
+  if(stage === 0){
+    noBtn.style.transform = "translateX(120px)";
+    stage = 1;
+    setTimeout(() => {
+      noBtn.style.position = "fixed";
+    }, 300);
   }
 }
 
-/* 📱 Shake animation */
-function shakePage(){
-  body.classList.add("shake");
-  setTimeout(() => body.classList.remove("shake"), 400);
+/* 🏃 Run away */
+document.addEventListener("mousemove", runAway);
+document.addEventListener("touchmove", (e) => {
+  if(stage !== 1) return;
+  runAway(e.touches[0]);
+});
+
+function runAway(e){
+  if(stage !== 1) return;
+
+  let x = e.clientX + 60;
+  let y = e.clientY + 50;
+
+  if(x > window.innerWidth - 120) x = e.clientX - 120;
+  if(y > window.innerHeight - 60) y = e.clientY - 60;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
 
-/* 🗯 Toast */
+/* 📳 VIBRATION */
+function vibratePhone(){
+  if(navigator.vibrate){
+    navigator.vibrate([300, 100, 300, 100, 300]); // strong vibration
+  }
+}
+
+/* 🗯 Toast message */
 function showToast(msg){
   const toast = document.createElement("div");
   toast.className = "toast";
   toast.innerText = msg;
   document.body.appendChild(toast);
-  setTimeout(()=>toast.remove(),2000);
+  setTimeout(() => toast.remove(), 2000);
 }
 
 /* 💍 YES */
