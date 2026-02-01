@@ -15,6 +15,7 @@ body{
   font-family:Poppins, sans-serif;
   background:linear-gradient(135deg,#ff9a9e,#fad0c4);
   overflow:hidden;
+  touch-action: manipulation;
 }
 
 .card{
@@ -26,6 +27,7 @@ body{
   max-width:400px;
   width:90%;
   position:relative;
+  z-index:2;
 }
 
 h1{color:#e91e63;}
@@ -45,6 +47,7 @@ button{
   font-size:16px;
   cursor:pointer;
   transition:all .3s ease;
+  user-select:none;
 }
 
 #yesBtn{
@@ -72,7 +75,6 @@ button{
   100%{transform:scale(1);}
 }
 
-/* ✨ Glow */
 .glow{
   animation:glow 1.5s infinite alternate;
 }
@@ -87,6 +89,7 @@ button{
   position:fixed;
   inset:0;
   pointer-events:none;
+  z-index:1;
 }
 
 .heart{
@@ -122,20 +125,53 @@ const noBtn = document.getElementById("noBtn");
 const card = document.getElementById("card");
 const hearts = document.getElementById("hearts");
 
-let moved = false;
+let stage = 0; // 0 = tease, 1 = runaway
 
-// 😈 NO moves ONLY when tried
-noBtn.addEventListener("mouseenter", () => {
-  if(!moved){
-    noBtn.style.transform = "translateX(120px)";
-    moved = true;
-  } else {
-    noBtn.style.transform = "translateX(0)";
-    moved = false;
-  }
+/* 🖱️ DESKTOP: tease on hover */
+noBtn.addEventListener("mouseenter", tease);
+
+/* 📱 MOBILE: tease on touch */
+noBtn.addEventListener("touchstart", (e) => {
+  e.preventDefault();
+  tease();
 });
 
-// 💍 YES = Ring Ceremony
+/* Tease function */
+function tease(){
+  if(stage === 0){
+    noBtn.style.transform = "translateX(120px)";
+    stage = 1;
+    setTimeout(() => {
+      noBtn.style.position = "fixed";
+    }, 300);
+  }
+}
+
+/* 🏃 RUN AWAY (desktop mouse + mobile finger) */
+document.addEventListener("mousemove", runAway);
+document.addEventListener("touchmove", (e) => {
+  if(stage !== 1) return;
+  const touch = e.touches[0];
+  runAway(touch);
+});
+
+function runAway(e){
+  if(stage !== 1) return;
+
+  let x = e.clientX + 60;
+  let y = e.clientY + 50;
+
+  if(x > window.innerWidth - 120) x = e.clientX - 120;
+  if(y > window.innerHeight - 60) y = e.clientY - 60;
+
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
+}
+
+/* ❌ BLOCK NO CLICK */
+noBtn.addEventListener("click", e => e.preventDefault());
+
+/* 💍 YES = Ring Ceremony */
 yesBtn.addEventListener("click", () => {
   card.innerHTML = `
     <h1 class="glow">She Said YES 💖</h1>
