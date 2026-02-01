@@ -84,6 +84,29 @@ button{
   to{text-shadow:0 0 25px gold;}
 }
 
+/* ❌ Not Possible toast */
+.toast{
+  position:fixed;
+  bottom:30px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#f44336;
+  color:#fff;
+  padding:12px 20px;
+  border-radius:20px;
+  font-size:14px;
+  opacity:0;
+  animation:toast 2s ease forwards;
+  z-index:5;
+}
+
+@keyframes toast{
+  0%{opacity:0;transform:translate(-50%,20px);}
+  20%{opacity:1;transform:translate(-50%,0);}
+  80%{opacity:1;}
+  100%{opacity:0;transform:translate(-50%,-10px);}
+}
+
 /* ❤️ Hearts */
 .hearts{
   position:fixed;
@@ -127,16 +150,20 @@ const hearts = document.getElementById("hearts");
 
 let stage = 0; // 0 = tease, 1 = runaway
 
-/* 🖱️ DESKTOP: tease on hover */
+/* 🖱 Desktop hover */
 noBtn.addEventListener("mouseenter", tease);
 
-/* 📱 MOBILE: tease on touch */
+/* 📱 Mobile tap */
 noBtn.addEventListener("touchstart", (e) => {
   e.preventDefault();
+  vibratePhone();
+  showToast("❌ Not Possible 😏");
   tease();
 });
 
-/* Tease function */
+/* ❌ Block click */
+noBtn.addEventListener("click", e => e.preventDefault());
+
 function tease(){
   if(stage === 0){
     noBtn.style.transform = "translateX(120px)";
@@ -147,12 +174,11 @@ function tease(){
   }
 }
 
-/* 🏃 RUN AWAY (desktop mouse + mobile finger) */
+/* 🏃 Run away */
 document.addEventListener("mousemove", runAway);
 document.addEventListener("touchmove", (e) => {
   if(stage !== 1) return;
-  const touch = e.touches[0];
-  runAway(touch);
+  runAway(e.touches[0]);
 });
 
 function runAway(e){
@@ -168,10 +194,23 @@ function runAway(e){
   noBtn.style.top = y + "px";
 }
 
-/* ❌ BLOCK NO CLICK */
-noBtn.addEventListener("click", e => e.preventDefault());
+/* 📳 VIBRATION */
+function vibratePhone(){
+  if(navigator.vibrate){
+    navigator.vibrate([300, 100, 300, 100, 300]); // strong vibration
+  }
+}
 
-/* 💍 YES = Ring Ceremony */
+/* 🗯 Toast message */
+function showToast(msg){
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.innerText = msg;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 2000);
+}
+
+/* 💍 YES */
 yesBtn.addEventListener("click", () => {
   card.innerHTML = `
     <h1 class="glow">She Said YES 💖</h1>
