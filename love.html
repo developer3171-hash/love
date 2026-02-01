@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Will You Marry Me 💖</title>
+<title>Movie Night 🎬</title>
 
 <style>
 body{
@@ -13,7 +13,7 @@ body{
   justify-content:center;
   align-items:center;
   font-family:Poppins, sans-serif;
-  background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+  background:linear-gradient(135deg,#141e30,#243b55);
   overflow:hidden;
   touch-action: manipulation;
 }
@@ -23,14 +23,14 @@ body{
   padding:30px 40px;
   border-radius:20px;
   text-align:center;
-  box-shadow:0 20px 40px rgba(0,0,0,.2);
-  max-width:400px;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+  max-width:420px;
   width:90%;
   position:relative;
   z-index:2;
 }
 
-h1{color:#e91e63;}
+h1{color:#ff5722;}
 p{color:#555;}
 
 .buttons{
@@ -63,13 +63,13 @@ button{
   position:relative;
 }
 
-/* 💍 Ring Ceremony */
-.ring{
-  font-size:80px;
-  animation:ringPop 1s ease forwards;
+/* 🎉 Celebration */
+.popcorn{
+  font-size:70px;
+  animation:pop 1s ease forwards;
 }
 
-@keyframes ringPop{
+@keyframes pop{
   0%{transform:scale(0);opacity:0;}
   60%{transform:scale(1.3);opacity:1;}
   100%{transform:scale(1);}
@@ -80,11 +80,11 @@ button{
 }
 
 @keyframes glow{
-  from{text-shadow:0 0 10px #ff69b4;}
-  to{text-shadow:0 0 25px gold;}
+  from{text-shadow:0 0 10px #ff9800;}
+  to{text-shadow:0 0 25px #ffc107;}
 }
 
-/* ❌ Not Possible toast */
+/* ❌ Toast */
 .toast{
   position:fixed;
   bottom:30px;
@@ -107,15 +107,15 @@ button{
   100%{opacity:0;transform:translate(-50%,-10px);}
 }
 
-/* ❤️ Hearts */
-.hearts{
+/* 🎬 Emojis floating */
+.floats{
   position:fixed;
   inset:0;
   pointer-events:none;
   z-index:1;
 }
 
-.heart{
+.float{
   position:absolute;
   font-size:24px;
   animation:floatUp 4s linear infinite;
@@ -131,37 +131,40 @@ button{
 <body>
 
 <div class="card" id="card">
-  <h1>Hey Love ❤️</h1>
-  <p>You make my world brighter every day.<br>Will you marry me? 💍</p>
+  <h1>Hey Buddy 😎</h1>
+  <p>
+    Popcorn is ready 🍿<br>
+    Movie is selected 🎬<br>
+    Will you come for movie night?
+  </p>
 
   <div class="buttons">
-    <button id="yesBtn">Yes 💖</button>
-    <button id="noBtn">No 🙈</button>
+    <button id="yesBtn">Yes, let's go 😍</button>
+    <button id="noBtn">No 🙄</button>
   </div>
 </div>
 
-<div class="hearts" id="hearts"></div>
+<div class="floats" id="floats"></div>
 
 <script>
 const yesBtn = document.getElementById("yesBtn");
 const noBtn = document.getElementById("noBtn");
 const card = document.getElementById("card");
-const hearts = document.getElementById("hearts");
+const floats = document.getElementById("floats");
 
-let stage = 0; // 0 = tease, 1 = runaway
+let stage = 0;
 
-/* 🖱 Desktop hover */
+/* Desktop hover */
 noBtn.addEventListener("mouseenter", tease);
 
-/* 📱 Mobile tap */
+/* Mobile */
 noBtn.addEventListener("touchstart", (e) => {
   e.preventDefault();
   vibratePhone();
-  showToast("❌ Not Possible 😏");
+  showToast("❌ Cancel option not available 😏");
   tease();
 });
 
-/* ❌ Block click */
 noBtn.addEventListener("click", e => e.preventDefault());
 
 function tease(){
@@ -174,7 +177,6 @@ function tease(){
   }
 }
 
-/* 🏃 Run away */
 document.addEventListener("mousemove", runAway);
 document.addEventListener("touchmove", (e) => {
   if(stage !== 1) return;
@@ -194,14 +196,12 @@ function runAway(e){
   noBtn.style.top = y + "px";
 }
 
-/* 📳 VIBRATION */
 function vibratePhone(){
   if(navigator.vibrate){
-    navigator.vibrate([300, 100, 300, 100, 300]); // strong vibration
+    navigator.vibrate([200, 100, 200]);
   }
 }
 
-/* 🗯 Toast message */
 function showToast(msg){
   const toast = document.createElement("div");
   toast.className = "toast";
@@ -210,25 +210,29 @@ function showToast(msg){
   setTimeout(() => toast.remove(), 2000);
 }
 
-/* 💍 YES */
+/* YES */
 yesBtn.addEventListener("click", () => {
   card.innerHTML = `
-    <h1 class="glow">She Said YES 💖</h1>
-    <div class="ring">💍</div>
-    <p>Ring ceremony complete ✨<br>Our forever begins now ❤️</p>
+    <h1 class="glow">Movie Night Confirmed 🎉</h1>
+    <div class="popcorn">🍿🎬</div>
+    <p>
+      Be ready at 8 PM ⏰<br>
+      Snacks on me 😎
+    </p>
   `;
-  createHearts();
+  createFloats();
 });
 
-function createHearts(){
+function createFloats(){
+  const emojis = ["🍿","🎬","😎","🔥","😂"];
   for(let i=0;i<35;i++){
-    const heart=document.createElement("div");
-    heart.className="heart";
-    heart.innerText="❤️";
-    heart.style.left=Math.random()*100+"vw";
-    heart.style.animationDuration=2+Math.random()*3+"s";
-    hearts.appendChild(heart);
-    setTimeout(()=>heart.remove(),5000);
+    const el=document.createElement("div");
+    el.className="float";
+    el.innerText=emojis[Math.floor(Math.random()*emojis.length)];
+    el.style.left=Math.random()*100+"vw";
+    el.style.animationDuration=2+Math.random()*3+"s";
+    floats.appendChild(el);
+    setTimeout(()=>el.remove(),5000);
   }
 }
 </script>
